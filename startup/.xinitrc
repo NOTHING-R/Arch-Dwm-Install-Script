@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# Load Xresources (fonts, dpi)
+[ -f ~/.Xresources ] && xrdb -merge ~/.Xresources
+
+# Load xprofile (env settings)
+[ -f ~/.xprofile ] && . ~/.xprofile
+
+# Input settings (touchpad)
+xinput set-prop "SYNA3071:00 06CB:82F1 Touchpad" "libinput Tapping Enabled" 1
+xinput set-prop "SYNA3071:00 06CB:82F1 Touchpad" "libinput Natural Scrolling Enabled" 1
+
+# Background
+~/.fehbg &
+
+# System services (START HERE)
+picom &
+dwmblocks &
+dunst &
+nm-applet &
+blueman-applet &
+flameshot &
+
+# Start window manager
+exec dwm
