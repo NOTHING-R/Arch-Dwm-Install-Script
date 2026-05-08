@@ -50,6 +50,13 @@ echo -e "${YELLOW}Cloning wallpapers...${RESET}"
 git clone https://github.com/NOTHING-R/Walllpapers.git ~/Walllpapers
 echo "✔ Wallpapers cloned to ~/Walllpapers"
 
+# ------------------------------------------
+# CLONE TMUX PLUGIN MANAGER (tpm)
+# ------------------------------------------
+echo -e "${YELLOW}Cloning tmux plugin manager...${RESET}"
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+echo "✔ tpm cloned to ~/.tmux/plugins/tpm"
+
 # INSTALLING ALL THE REQUERED PACKAGES
 echo -e "${YELLOW}Installing required applications...${RESET}"
 
@@ -65,6 +72,7 @@ sudo pacman -S --needed --noconfirm \
   xorg-server \
   xorg-xinit \
   xorg-xrdb \
+  xorg-setxkbmap \
   libx11 \
   libxft \
   libxinerama \
@@ -150,6 +158,7 @@ echo "✔ Bluetooth service enabled"
 sudo pacman -S --needed --noconfirm \
   pipewire \
   pipewire-pulse \
+  pipewire-alsa \
   wireplumber \
   pavucontrol
 
