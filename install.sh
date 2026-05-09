@@ -79,6 +79,7 @@ sudo pacman -S --needed --noconfirm \
   libinput \
   xf86-input-libinput \
   xorg-xinput \
+  btop \
   rofi \
   unzip \
   curl
