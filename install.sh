@@ -108,7 +108,9 @@ sudo pacman -S --needed --noconfirm \
   xf86-input-libinput \
   xorg-xinput \
   rofi \
+  zip \
   unzip \
+  inxi \
   curl
 
 echo "✔ Xorg + development tools installed"
@@ -289,12 +291,9 @@ sudo pacman -S --needed --noconfirm \
   stow \
   ripgrep \
   fd \
-  curl \
-  unzip \
   xclip \
   tmux \
-  firefox \
-  inxi
+  firefox
 
 sudo npm install -g live-server
 echo "✔ Programming + terminal toolchain installed"
