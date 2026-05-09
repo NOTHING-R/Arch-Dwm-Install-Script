@@ -1,16 +1,23 @@
+/* Colors defined once — all blocks use these */
+#define FG "#cdd6f4"
+#define BG "#1e1e2e"
+
 static const Block blocks[] = {
-    /*Icon*/  /*Command*/                                                                 /*Update Interval*/  /*Signal*/
+    /*Icon*/  /*Command*/                                                                                                                                                                                         /*Interval*/  /*Signal*/
 
-    {"", "free -h | awk '/^Mem/ {print \"Mem: \"$3\"/\"$2}' | sed 's/i//g'",              3,  0},
+    /* Memory */
+    { "", "echo \"^c" FG "^^b" BG "^  $(free -h | awk '/^Mem/{print $3\"/\"$2}' | sed 's/i//g') ^d^\"",                                                                                                         1,            0 },
 
-    {"", "df -h / | awk 'NR==2 {print \"Disk: \"$3\"/\"$2}'",                            60, 0},
+    /* Disk */
+    { "", "echo \"^c" FG "^^b" BG "^  $(df -h / | awk 'NR==2{print $3\"/\"$2}') ^d^\"",                                                                                                                         60,           0 },
 
-    {"", "cat /sys/class/power_supply/BAT0/status | awk '{printf \"BAT: %s \", $1}'; cat /sys/class/power_supply/BAT0/capacity | awk '{print $1\"%\"}'", 10, 0},
+    /* Battery — fully inlined, shows Charging / Discharging / Full */
+    { "", "[ -d /sys/class/power_supply/BAT0 ] && echo \"^c" FG "^^b" BG "^  BAT $(cat /sys/class/power_supply/BAT0/capacity)% [$(cat /sys/class/power_supply/BAT0/status)] ^d^\"",                             10,           0 },
 
-    {"", "date '+%b %d (%a) %I:%M:%S%p'",                                                1,  0},
+    /* Date */
+    { "", "echo \"^c" FG "^^b" BG "^  $(date '+%b %d (%a) %I:%M:%S%p') ^d^\"",                                                                                                                                  1,            0 },
 };
 
-//sets delimiter between status commands. NULL character ('\0') means no delimiter.
-static char delim[] = " | ";
-static unsigned int delimLen = 5;
-
+/* No delimiter — each block handles its own spacing */
+static char delim[] = "";
+static unsigned int delimLen = 0;

@@ -14,8 +14,8 @@ static const int systrayonleft           = 0;  /* 0 means systray on right side 
 static const int systraypinning          = 0;  /* 0 means follow selected monitor */
 static const int systraypinningfailfirst = 1;
 static const unsigned int systrayspacing = 2;  /* systray spacing */
-static const char *fonts[]          = { "monospace:size=10" };
-static const char dmenufont[]       = "monospace:size=10";
+static const char *fonts[] = { "JetBrainsMono Nerd Font:size=11" };
+static const char dmenufont[] = "JetBrainsMono Nerd Font:size=11";
 
 
 

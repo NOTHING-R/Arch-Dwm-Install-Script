@@ -14,6 +14,7 @@ xinput set-prop "SYNA3071:00 06CB:82F1 Touchpad" "libinput Natural Scrolling Ena
 ~/.fehbg &
 
 # System services (START HERE)
+/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 picom &
 dwmblocks &
 dunst &

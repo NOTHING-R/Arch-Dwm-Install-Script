@@ -191,15 +191,21 @@ sudo pacman -S --needed --noconfirm \
   network-manager-applet \
   brightnessctl \
   nsxiv \
-  nautilus
+  nautilus \
+  xdg-user-dirs \
+  polkit-gnome
 
 # Enable and start NetworkManager so internet works on first boot
 sudo systemctl enable --now NetworkManager
 echo "✔ NetworkManager enabled"
 
+# Create standard user directories (Downloads, Documents, Pictures etc.)
+xdg-user-dirs-update
+echo "✔ XDG user directories created"
+
 # Write ~/.fehbg directly — feh can't run during install (no display/X server).
 # This file is sourced by .xinitrc on every login to restore the wallpaper.
-echo "feh --no-fehbg --bg-scale '$HOME/Walllpapers/crime.jpg'" >~/.fehbg
+echo "feh --no-fehbg --bg-fill '$HOME/Walllpapers/crime.jpg'" >~/.fehbg
 chmod +x ~/.fehbg
 echo "✔ ~/.fehbg created"
 echo "✔ Window manager rice core tools installed"
@@ -214,6 +220,7 @@ echo "✔ Window manager rice core tools installed"
 sudo pacman -S --needed --noconfirm \
   vim \
   neovim \
+  imagemagick \
   gcc \
   clang \
   make \
@@ -232,6 +239,20 @@ sudo pacman -S --needed --noconfirm \
   firefox
 
 echo "✔ Programming + terminal toolchain installed"
+
+# ------------------------------------------
+# 8. MEDIA + EDITING
+# ------------------------------------------
+# - obs-studio: screen recording and streaming
+# - kdenlive: video editor
+# - easyeffects: advanced audio effects and equalizer (PipeWire)
+
+sudo pacman -S --needed --noconfirm \
+  obs-studio \
+  kdenlive \
+  easyeffects
+
+echo "✔ Media and editing tools installed"
 
 # Set fish as the default shell
 echo -e "${YELLOW}Setting fish as default shell...${RESET}"
