@@ -61,6 +61,33 @@ echo "✔ tpm cloned to ~/.tmux/plugins/tpm"
 echo -e "${YELLOW}Installing required applications...${RESET}"
 
 # ------------------------------------------
+# 0. GRAPHICS DRIVERS (Intel)
+# ------------------------------------------
+# Confirmed working on HP EliteBook 840 G5 (Intel UHD 620 / Kaby Lake-R)
+# mesa: open source graphics stack + iris driver (required for X11)
+# vulkan-intel: Vulkan support for Intel GPUs
+# vulkan-icd-loader: Vulkan loader that dispatches to the correct driver
+# intel-media-driver: VA-API hardware video acceleration (iHD driver)
+# libva: VA-API library (required by intel-media-driver)
+# libva-intel-driver: VA-API legacy driver (kept alongside intel-media-driver)
+# libva-utils: vainfo tool to verify hardware acceleration is working
+#
+# NOTE: xf86-video-intel is intentionally NOT installed.
+# Modern Intel hardware works better with mesa's modesetting driver.
+# The i915 kernel driver comes with the Linux kernel — no package needed.
+
+sudo pacman -S --needed --noconfirm \
+  mesa \
+  vulkan-intel \
+  vulkan-icd-loader \
+  intel-media-driver \
+  libva \
+  libva-intel-driver \
+  libva-utils
+
+echo "✔ Intel graphics drivers installed"
+
+# ------------------------------------------
 # 1. BASIC DEVELOPMENT + XORG ENVIRONMENT
 # ------------------------------------------
 # Installs essential build tools, X11 server, input drivers,
@@ -79,7 +106,6 @@ sudo pacman -S --needed --noconfirm \
   libinput \
   xf86-input-libinput \
   xorg-xinput \
-  btop \
   rofi \
   unzip \
   curl
@@ -237,7 +263,8 @@ sudo pacman -S --needed --noconfirm \
   unzip \
   xclip \
   tmux \
-  firefox
+  firefox \
+  inxi
 
 echo "✔ Programming + terminal toolchain installed"
 
