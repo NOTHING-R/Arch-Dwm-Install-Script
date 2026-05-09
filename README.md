@@ -27,21 +27,16 @@ archinstall
 Below is every option in the archinstall menu and what to choose.
 
 ### Archinstall language
-
 Leave as English unless you want the installer UI in another language. This does not affect your system language.
 
 ### Locales
-
 Set your language (e.g. `en_US`) and keyboard layout. This affects how your system handles text encoding and key input. Get this right — it is easier to set here than to fix later.
 
 ### Mirrors and repositories
-
 Choose mirrors geographically close to you. Closer mirrors download packages faster. You can use the mirror ranking feature to automatically pick the fastest ones.
 
 ### Disk configuration
-
 Choose **Use a best-effort default partition layout**. This automatically creates:
-
 - A 1 GiB EFI boot partition
 - The rest of the disk as your main partition
 
@@ -59,54 +54,42 @@ Subvolumes let you take snapshots of your system before updates so you can roll 
 When asked about compression, choose **Use compression**. This uses `zstd` compression which reduces disk writes and can actually improve performance. It does not hurt your SSD.
 
 ### Swap
-
 Choose **zram** with **zstd**. zram creates a compressed swap space inside your RAM itself. It only activates when RAM is nearly full and has zero SSD writes — better for both performance and drive longevity compared to a traditional swap partition.
 
 ### Bootloader
-
 Choose **GRUB**. It is the most widely supported bootloader and works reliably across hardware generations.
 
 ### Kernels
-
 Leave as `linux` (the default). The standard kernel is fine for this setup.
 
 ### Hostname
-
 Set whatever name you want your machine to have on the network (e.g. `archbox`, your name, anything).
 
 ### Authentication
-
 Set your root password and create your user account. Make sure to check the option to give your user `sudo` access — the install script needs it.
 
 ### Profile
-
 **Do not select any profile.** Leave this empty. The install script handles everything — selecting a profile here would install a desktop environment you don't want.
 
 ### Applications
-
 - **Audio**: choose **PipeWire** — the script expects PipeWire and configures it
 - **Bluetooth**: choose **Yes** if you want Bluetooth — the script also installs `blueman` for a GUI
 - **Print service (CUPS)**: choose **No** unless you have a printer. It adds background services with no benefit if you don't print
 - **Firewall**: choose **Yes** and select **ufw** — essential for a laptop that connects to public networks. It blocks incoming connections by default and you will never notice it
 
 ### Network configuration
-
 Choose **Use NetworkManager (default backend)**. NetworkManager handles both wired and wireless connections and is what `nm-applet` in the systray talks to. Do not choose the iwd backend — it conflicts with the default wpa_supplicant setup and causes complications.
 
 ### Pacman
-
 Enable **multilib** if you plan to run 32-bit applications or games. Otherwise leave defaults.
 
 ### Additional packages
-
 Leave empty. The script installs everything.
 
 ### Timezone
-
 Set your timezone. This keeps your system clock correct.
 
 ### Automatic time sync (NTP)
-
 Leave enabled. This keeps your clock synced automatically over the internet.
 
 Once everything is configured, choose **Install** and let it finish. When done, reboot into your new system.
@@ -118,33 +101,28 @@ Once everything is configured, choose **Install** and let it finish. When done, 
 After rebooting, log in as your user (not root). You will be at a plain terminal — that is correct.
 
 Make sure you have an internet connection:
-
 ```bash
 ping archlinux.org
 ```
 
 Clone the repo:
-
 ```bash
 git clone https://github.com/NOTHING-R/Arch-Dwm-Install-Script.git
 cd Arch-Dwm-Install-Script
 ```
 
 Make the script executable and run it:
-
 ```bash
 chmod +x install.sh
 ./install.sh
 ```
 
 The script will take 10–20 minutes depending on your internet speed. When it finishes you will see:
-
 ```
 ✅ Installation complete! Run 'startx' to launch dwm.
 ```
 
 Then simply type:
-
 ```bash
 startx
 ```
@@ -154,30 +132,24 @@ startx
 ## What the Script Does — Section by Section
 
 ### Setup — yay (AUR helper)
-
 ```bash
 sudo pacman -Suy
 git clone https://aur.archlinux.org/yay.git /tmp/yay-build
 ```
-
 The first thing the script does is update the system and install **yay**. Arch's official package manager is `pacman` but it only covers the official repositories. yay adds access to the **AUR (Arch User Repository)** — a community-maintained collection of thousands of additional packages. Three things in this setup require it: `betterlockscreen`, `wlogout`, and `google-chrome`. yay is cloned to `/tmp` so it doesn't leave a build folder in your home directory.
 
 ### Setup — Wallpapers and tpm
-
 ```bash
 git clone https://github.com/NOTHING-R/Walllpapers.git ~/Walllpapers
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ```
-
 The wallpaper repo is cloned to `~/Walllpapers` before any packages are installed. This is done early so `feh` can reference it correctly when the `~/.fehbg` file is written later. tpm (tmux plugin manager) is cloned to `~/.tmux/plugins/tpm` so that on your first tmux launch it finds its plugins (catppuccin theme) already in place.
 
 ### Section 0 — Intel Graphics Drivers
-
 ```
 mesa, mesa-utils, vulkan-intel, vulkan-icd-loader,
 intel-media-driver, libva, libva-intel-driver, libva-utils
 ```
-
 X11 cannot start without graphics drivers. These packages are the complete open-source Intel graphics stack confirmed working on the HP EliteBook 840 G5 (Intel UHD 620).
 
 - `mesa` — the core open-source graphics library. Provides OpenGL and the `iris` driver that X11 uses for Intel GPUs
@@ -192,12 +164,10 @@ X11 cannot start without graphics drivers. These packages are the complete open-
 > **Note:** `xf86-video-intel` is intentionally not installed. On modern Intel hardware (anything after Sandy Bridge), the modesetting driver built into Mesa performs better. The `i915` kernel driver comes with the Linux kernel itself — no separate package is needed.
 
 ### Section 1 — Xorg Environment
-
 ```
 git, base-devel, xorg-server, xorg-xinit, xorg-xrdb, xorg-setxkbmap,
 libx11, libxft, libxinerama, libinput, xf86-input-libinput, xorg-xinput, rofi, unzip, curl
 ```
-
 Everything needed to run X11 and compile DWM.
 
 - `xorg-server` — the X11 display server. The entire graphical environment runs on top of this
@@ -211,12 +181,10 @@ Everything needed to run X11 and compile DWM.
 - `base-devel` — the group of tools needed to compile software from source (gcc, make, etc.)
 
 ### Section 2 — Fonts
-
 ```
 noto-fonts-emoji, ttf-jetbrains-mono-nerd, ttf-firacode-nerd,
 ttf-hack-nerd, ttf-cascadia-code-nerd
 ```
-
 Nerd Fonts are patched versions of popular programming fonts with thousands of icons embedded directly into the font. DWM, dwmblocks, rofi, and kitty all use these.
 
 - `ttf-jetbrains-mono-nerd` — used in the DWM bar and rofi (`JetBrainsMono Nerd Font:size=11`)
@@ -227,12 +195,10 @@ Nerd Fonts are patched versions of popular programming fonts with thousands of i
 After installing, `fc-cache -fv` refreshes the font cache so the system immediately recognises the new fonts.
 
 ### Section 3 — Virtualization
-
 ```
 qemu-full, virt-manager, virt-viewer, dnsmasq, vde2,
 openbsd-netcat, libvirt, edk2-ovmf
 ```
-
 A full KVM/QEMU virtual machine stack. Lets you run Windows, other Linux distros, or anything else in a VM.
 
 - `qemu-full` — the actual virtualisation engine
@@ -243,21 +209,17 @@ A full KVM/QEMU virtual machine stack. Lets you run Windows, other Linux distros
 - The script adds your user to the `libvirt` group so you can manage VMs without sudo, and starts the default virtual network so VMs have internet access immediately
 
 ### Section 4 — Bluetooth
-
 ```
 bluez, bluez-utils, blueman
 ```
-
 - `bluez` — the Linux Bluetooth stack
 - `bluez-utils` — command-line tools (`bluetoothctl`)
 - `blueman` — the GUI Bluetooth manager whose tray icon appears in the systray via `blueman-applet &` in `.xinitrc`
 
 ### Section 5 — Audio
-
 ```
 pipewire, pipewire-pulse, pipewire-alsa, wireplumber, pavucontrol
 ```
-
 PipeWire is the modern Linux audio server. It replaces both PulseAudio and JACK.
 
 - `pipewire` — the core audio server
@@ -269,13 +231,11 @@ PipeWire is the modern Linux audio server. It replaces both PulseAudio and JACK.
 Services are enabled with `systemctl --user enable` so they start automatically on login without needing a display manager.
 
 ### Section 6 — Window Manager Core
-
 ```
 picom, feh, dunst, flameshot, libnotify, networkmanager,
 network-manager-applet, brightnessctl, nsxiv, nautilus,
 xdg-user-dirs, xdg-utils, polkit-gnome
 ```
-
 Everything that makes the desktop usable.
 
 - `picom` — the compositor. Adds transparency to the kitty terminal, shadows, and blur effects. Without it windows render but look flat and there are no transparency effects
@@ -295,12 +255,10 @@ Everything that makes the desktop usable.
 The script also writes `~/.fehbg` directly to disk rather than running `feh` — because during install there is no display server running, so `feh` would fail silently and `~/.fehbg` would never be created. Writing it directly guarantees the wallpaper loads on first boot.
 
 ### Section 7 — Programming Toolchain
-
 ```
 vim, neovim, imagemagick, gcc, clang, make, cmake, nodejs, npm,
 kitty, fish, stow, ripgrep, fd, curl, unzip, xclip, tmux, firefox, inxi
 ```
-
 - `neovim` — the primary text editor, configured with lazy.nvim under `configs/nvim`
 - `imagemagick` — required by the `image.nvim` plugin for rendering images inside neovim
 - `kitty` — the terminal emulator. GPU-accelerated with transparency via picom
@@ -315,11 +273,9 @@ kitty, fish, stow, ripgrep, fd, curl, unzip, xclip, tmux, firefox, inxi
 After all section 7 packages install, `chsh -s $(which fish)` sets fish as the default shell. This takes effect on next login.
 
 ### AUR Packages
-
 ```
 betterlockscreen, wlogout, google-chrome
 ```
-
 These are installed via yay because they are not in the official Arch repos.
 
 - `betterlockscreen` — a fast, good-looking screen locker. The script pre-caches `crime.jpg` with `betterlockscreen -u` so the lockscreen has a wallpaper immediately. Bound to `Alt+X` in DWM
@@ -327,17 +283,14 @@ These are installed via yay because they are not in the official Arch repos.
 - `google-chrome` — Chrome browser as an alternative to Firefox
 
 ### Section 8 — Media and Editing
-
 ```
 obs-studio, kdenlive, easyeffects
 ```
-
 - `obs-studio` — screen recording and live streaming
 - `kdenlive` — video editor. Uses VA-API hardware acceleration thanks to `intel-media-driver` installed in section 0
 - `easyeffects` — advanced audio processing (equalizer, compressor, noise cancellation). Works natively with PipeWire
 
 ### Dotfiles Deploy
-
 After all packages are installed the script deploys your configs:
 
 ```
@@ -363,7 +316,6 @@ DWM and dwmblocks are copied to `~/.config/` rather than being built directly fr
 DWM (Dynamic Window Manager) is a window manager written in C. Unlike GNOME or KDE, it has no settings menu — you configure it by editing the source code and recompiling. The entire configuration lives in two files.
 
 ### config.h
-
 This is where everything about DWM's behavior is defined — fonts, colors, keybindings, layouts, and rules for specific applications. When you change something here you must recompile:
 
 ```bash
@@ -373,7 +325,6 @@ make clean && make && sudo make install
 ```
 
 ### colors.h
-
 Defines the color palette used by the DWM bar. Colors come from `colors.h` which is included by `config.h`:
 
 ```c
@@ -385,11 +336,9 @@ static const char wal_fg_sel[] = "#020101"; // selected tag text
 ```
 
 ### config.def.h
-
 The "default" version of `config.h`. Kept identical to `config.h` so if `config.h` ever gets deleted, `make` regenerates it correctly from your custom settings rather than from the original stock DWM defaults.
 
 ### dwmblocks
-
 DWM's bar cannot display dynamic information (time, battery, RAM) on its own. dwmblocks is a separate program that runs in the background and feeds text into the bar's status area by calling `xsetroot`. Each "block" is a small command that runs on a timer:
 
 ```c
@@ -409,7 +358,6 @@ All four blocks are inlined directly in `blocks.h` as shell commands — no exte
 And applied to every block using DWM's color markup syntax: `^c<color>^` sets foreground, `^b<color>^` sets background, `^d^` resets to defaults.
 
 ### Layouts
-
 DWM comes with three layouts, switched with keybindings:
 
 - **Tile `[]=`** — the default. One master window on the left taking 55% of the screen, all others stacked on the right
@@ -417,7 +365,6 @@ DWM comes with three layouts, switched with keybindings:
 - **Monocle `[M]`** — one fullscreen window at a time, like a maximized view
 
 ### Tags
-
 DWM uses tags instead of traditional workspaces. Every window can be on one or more tags. Tags 1–10 are available. Firefox is configured to always open on tag 9 (`1 << 8`).
 
 ---
@@ -432,22 +379,18 @@ DWM uses tags instead of traditional workspaces. Every window can be on one or m
 # Load Xresources (fonts, dpi)
 [ -f ~/.Xresources ] && xrdb -merge ~/.Xresources
 ```
-
 `xrdb` loads `~/.Xresources` into the X resource database. This is where `Xft.dpi: 140` lives — setting the DPI to 140 makes text render at the right size for the EliteBook's 1920x1080 13.9" display. Without this, fonts are too small.
 
 ```sh
 # Load xprofile (env settings)
 [ -f ~/.xprofile ] && . ~/.xprofile
 ```
-
 Sources `.xprofile` which sets environment variables:
-
 ```sh
 export EDITOR=nvim
 export TERMINAL=kitty
 export BROWSER=firefox
 ```
-
 These tell every program in the session which editor, terminal, and browser to use when they need to launch one.
 
 ```sh
@@ -455,20 +398,16 @@ These tell every program in the session which editor, terminal, and browser to u
 xinput set-prop "SYNA3071:00 06CB:82F1 Touchpad" "libinput Tapping Enabled" 1
 xinput set-prop "SYNA3071:00 06CB:82F1 Touchpad" "libinput Natural Scrolling Enabled" 1
 ```
-
 Enables tap-to-click and natural (reversed) scrolling on the touchpad. The device name is specific to the HP EliteBook 840 G5. If you run this on a different machine, find your touchpad name with `xinput list` and update accordingly.
 
 ```sh
 # Background
 ~/.fehbg &
 ```
-
 Runs the `~/.fehbg` script which was created during install. It contains a single line:
-
 ```sh
 feh --no-fehbg --bg-fill '/home/user/Walllpapers/crime.jpg'
 ```
-
 `feh` sets this image as the desktop background. When you change the wallpaper using `wal.sh`, feh automatically updates `~/.fehbg` with the new image path, so it persists across reboots.
 
 ```sh
@@ -481,7 +420,6 @@ nm-applet &
 blueman-applet &
 flameshot &
 ```
-
 Every service is launched with `&` which means "run in the background and continue". The order matters:
 
 - `polkit-gnome` starts first so it is ready before any app requests elevated privileges
@@ -494,7 +432,6 @@ Every service is launched with `&` which means "run in the background and contin
 # Start window manager
 exec dwm
 ```
-
 `exec` replaces the current shell process with `dwm`. This is important — using `exec` means when DWM exits, the X session ends cleanly. Without `exec` you would use `dwm &` and the session would not terminate when you quit DWM.
 
 ---
@@ -536,7 +473,6 @@ exec dwm
 ## After Install
 
 **Verify graphics acceleration is working:**
-
 ```bash
 glxinfo | grep "OpenGL renderer"
 # Should show: Mesa Intel UHD Graphics 620 (KBL GT2)
@@ -552,9 +488,72 @@ Start tmux and press `Ctrl+B` then `Shift+I` to install the catppuccin theme and
 Press `Alt+W` inside DWM to open the nsxiv wallpaper picker. Navigate thumbnails with arrow keys, press `M` to mark your choice, then `Q` to apply it.
 
 **Recompile DWM after config changes:**
-
 ```bash
 cd ~/.config/dwm
 make clean && make && sudo make install
 # Restart DWM: Alt+Shift+Q, then startx
 ```
+
+---
+
+## Browser File Uploading (File Picker)
+
+### The Problem
+
+On a minimal dwm + startx setup, clicking the file upload button in Firefox or Chrome shows either nothing at all or a blank white screen. This happens because browsers on X11 use the **xdg-desktop-portal** to open the system file picker dialog, and on a plain startx session the portal can't find the display because systemd user services don't inherit your X environment variables automatically.
+
+Three things need to be in place for file uploading to work:
+
+**1. Portal packages installed:**
+- `xdg-desktop-portal` — the portal middleware layer
+- `xdg-desktop-portal-gtk` — the GTK file picker backend
+- `gvfs` — virtual filesystem support (required by the GTK portal)
+
+All three are installed by `install.sh` in section 6.
+
+**2. X environment exported to systemd on login:**
+
+This line in `.xinitrc` passes `DISPLAY` to the systemd user session so `xdg-desktop-portal-gtk` can find the X server when it starts:
+```sh
+systemctl --user import-environment DISPLAY XAUTHORITY DBUS_SESSION_BUS_ADDRESS
+```
+Without this, the GTK portal service starts but immediately crashes with `cannot open display`.
+
+**3. Firefox configured to use the portal:**
+
+By default Firefox on X11 uses its own built-in file picker which doesn't integrate with the system. To make it use the portal:
+1. Open `about:config` in Firefox
+2. Search for `widget.use-xdg-desktop-portal.file-picker`
+3. Set the value to `1`
+4. Restart Firefox
+
+Chrome uses the portal automatically without any extra configuration.
+
+---
+
+### The Fullscreen File Picker Issue
+
+On first use, the GTK file picker may open completely fullscreen — taking over your entire screen with no window decorations. This is GTK not knowing the correct screen dimensions on a tiling window manager.
+
+**How to resize it:**
+- Hold `Alt` and **right-click drag** anywhere on the file picker window to resize it
+- GTK remembers the size after you resize it once — it will open at the correct size from then on
+
+---
+
+### Troubleshooting
+
+If the file picker still doesn't appear, check if the portal services are running:
+```bash
+systemctl --user status xdg-desktop-portal
+systemctl --user status xdg-desktop-portal-gtk
+```
+
+If `xdg-desktop-portal-gtk` shows `failed` with `cannot open display`, the environment wasn't imported correctly. Run manually:
+```bash
+systemctl --user import-environment DISPLAY XAUTHORITY DBUS_SESSION_BUS_ADDRESS
+systemctl --user restart xdg-desktop-portal-gtk
+systemctl --user restart xdg-desktop-portal
+```
+
+Then try again. After the next full logout and `startx`, `.xinitrc` handles this automatically.

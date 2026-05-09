@@ -196,18 +196,37 @@ systemctl --user enable pipewire pipewire-pulse wireplumber
 echo "✔ Audio stack installed (PipeWire + PulseAudio compat)"
 
 # ------------------------------------------
+
 # 6. WINDOW MANAGER / RICE CORE
+
 # ------------------------------------------
-# This installs essential tools for customizing a minimal Linux desktop:
+
+# This installs essential tools for customizing a minimal Linux desktop
+
 # - picom: adds transparency, shadows, and blur effects
+
 # - feh: sets wallpapers on X11 systems
+
 # - dunst: lightweight notification daemon
+
 # - libnotify: allows applications to send desktop notifications
+
 # - networkmanager: the actual network service (required for internet)
+
 # - network-manager-applet: nm-applet systray icon (used in .xinitrc)
+
 # - brightnessctl: backlight control (used in dwm keybinds)
+
 # - nsxiv: image viewer used by the wallpaper picker script
+
 # - xdg-utils: xdg-open for opening files/links with correct app
+
+# - xdg-desktop-portal: middleware for file pickers and system dialogs
+
+# - xdg-desktop-portal-gtk: GTK backend for the portal (file picker UI)
+
+# - gvfs: virtual filesystem for Nautilus (trash, MTP, network shares)
+
 # - nautilus: GUI file manager
 
 sudo pacman -S --needed --noconfirm \
@@ -223,22 +242,30 @@ sudo pacman -S --needed --noconfirm \
   nautilus \
   xdg-user-dirs \
   xdg-utils \
+  xdg-desktop-portal \
+  xdg-desktop-portal-gtk \
+  gvfs \
   polkit-gnome
 
 # Enable and start NetworkManager so internet works on first boot
+
 sudo systemctl enable --now NetworkManager
 echo "✔ NetworkManager enabled"
 
 # Create standard user directories (Downloads, Documents, Pictures etc.)
+
 xdg-user-dirs-update
 echo "✔ XDG user directories created"
 
-# Write ~/.fehbg directly — feh can't run during install (no display/X server).
-# This file is sourced by .xinitrc on every login to restore the wallpaper.
+# Write ~/.fehbg directly — feh can't run during install (no display/X server)
+
+# This file is sourced by .xinitrc on every login to restore the wallpaper
+
 echo "feh --no-fehbg --bg-fill '$HOME/Walllpapers/crime.jpg'" >~/.fehbg
 chmod +x ~/.fehbg
 echo "✔ ~/.fehbg created"
 echo "✔ Window manager rice core tools installed"
+
 # ------------------------------------------
 # 7. PROGRAMMING + TERMINAL TOOLCHAIN
 # ------------------------------------------
@@ -269,6 +296,7 @@ sudo pacman -S --needed --noconfirm \
   firefox \
   inxi
 
+sudo npm install -g live-server
 echo "✔ Programming + terminal toolchain installed"
 
 # ------------------------------------------

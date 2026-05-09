@@ -13,6 +13,9 @@ xinput set-prop "SYNA3071:00 06CB:82F1 Touchpad" "libinput Natural Scrolling Ena
 # Background
 ~/.fehbg &
 
+# Export X environment to systemd user session so portals and file pickers work
+systemctl --user import-environment DISPLAY XAUTHORITY DBUS_SESSION_BUS_ADDRESS
+
 # System services (START HERE)
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 picom &
