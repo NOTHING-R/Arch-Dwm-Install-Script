@@ -78,6 +78,7 @@ echo -e "${YELLOW}Installing required applications...${RESET}"
 
 sudo pacman -S --needed --noconfirm \
   mesa \
+  mesa-utils \
   vulkan-intel \
   vulkan-icd-loader \
   intel-media-driver \
@@ -206,6 +207,7 @@ echo "✔ Audio stack installed (PipeWire + PulseAudio compat)"
 # - network-manager-applet: nm-applet systray icon (used in .xinitrc)
 # - brightnessctl: backlight control (used in dwm keybinds)
 # - nsxiv: image viewer used by the wallpaper picker script
+# - xdg-utils: xdg-open for opening files/links with correct app
 # - nautilus: GUI file manager
 
 sudo pacman -S --needed --noconfirm \
@@ -220,6 +222,7 @@ sudo pacman -S --needed --noconfirm \
   nsxiv \
   nautilus \
   xdg-user-dirs \
+  xdg-utils \
   polkit-gnome
 
 # Enable and start NetworkManager so internet works on first boot

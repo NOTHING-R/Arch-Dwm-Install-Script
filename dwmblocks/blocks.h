@@ -1,6 +1,7 @@
 /* Colors defined once — all blocks use these */
 #define BG "#020101"
-#define FG "#40403F"
+#define FG "#a7a7a6"
+// #define FG "#40403F"
 
 static const Block blocks[] = {
     /*Icon*/  /*Command*/                                                                                                                                                                                         /*Interval*/  /*Signal*/
