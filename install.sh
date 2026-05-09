@@ -175,9 +175,11 @@ echo "✔ Audio stack installed (PipeWire + PulseAudio compat)"
 # - feh: sets wallpapers on X11 systems
 # - dunst: lightweight notification daemon
 # - libnotify: allows applications to send desktop notifications
+# - networkmanager: the actual network service (required for internet)
 # - network-manager-applet: nm-applet systray icon (used in .xinitrc)
 # - brightnessctl: backlight control (used in dwm keybinds)
 # - nsxiv: image viewer used by the wallpaper picker script
+# - nautilus: GUI file manager
 
 sudo pacman -S --needed --noconfirm \
   picom \
@@ -185,12 +187,21 @@ sudo pacman -S --needed --noconfirm \
   dunst \
   flameshot \
   libnotify \
+  networkmanager \
   network-manager-applet \
   brightnessctl \
-  nsxiv
+  nsxiv \
+  nautilus
 
-# Set initial wallpaper from cloned repo so ~/.fehbg is created for later scripts
-feh --bg-scale "$HOME/Walllpapers/crime.jpg"
+# Enable and start NetworkManager so internet works on first boot
+sudo systemctl enable --now NetworkManager
+echo "✔ NetworkManager enabled"
+
+# Write ~/.fehbg directly — feh can't run during install (no display/X server).
+# This file is sourced by .xinitrc on every login to restore the wallpaper.
+echo "feh --no-fehbg --bg-scale '$HOME/Walllpapers/crime.jpg'" >~/.fehbg
+chmod +x ~/.fehbg
+echo "✔ ~/.fehbg created"
 echo "✔ Window manager rice core tools installed"
 # ------------------------------------------
 # 7. PROGRAMMING + TERMINAL TOOLCHAIN
@@ -230,8 +241,8 @@ echo "✔ Default shell set to fish"
 # Sync everything before AUR installs
 yay -Suy --noconfirm
 
-echo -e "${YELLOW}Installing AUR packages (betterlockscreen, wlogout)...${RESET}"
-yay -S --noconfirm betterlockscreen wlogout
+echo -e "${YELLOW}Installing AUR packages (betterlockscreen, wlogout, google-chrome)...${RESET}"
+yay -S --noconfirm betterlockscreen wlogout google-chrome
 # ------------------------------------------
 # DOTFILES DEPLOY SCRIPT (DWM SETUP)
 # ------------------------------------------
@@ -306,3 +317,14 @@ cp -f "$REPO_DIR/startup/.Xresources" ~/
 cp -f "$REPO_DIR/configs/.tmux.conf" ~/
 
 echo "✔ .xinitrc, .xprofile, .Xresources, .tmux.conf → ~/"
+
+# ------------------------------------------
+# 6. CACHE WALLPAPER FOR BETTERLOCKSCREEN
+# ------------------------------------------
+# betterlockscreen needs to pre-process the wallpaper once before
+# it can use it. Run this after ~/.fehbg is already written.
+echo -e "${YELLOW}Caching wallpaper for betterlockscreen...${RESET}"
+betterlockscreen -u "$HOME/Walllpapers/crime.jpg"
+echo "✔ betterlockscreen wallpaper cached"
+
+echo -e "${GREEN}✅ Installation complete! Run 'startx' to launch dwm.${RESET}"
